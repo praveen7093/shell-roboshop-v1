@@ -33,15 +33,15 @@ echo "$(timestamp) [INFO] ===== script started execution======" | tee -a $logs_f
 cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
 validate $? "adding rabbitmq repo"
 
-dnf install erlang rabbitmq-server -y &?? $logs_file
+dnf install erlang rabbitmq-server -y &>> $logs_file
 validate $? "install rabbit mq server" &?? $logs_file
 
-systemctl enable rabbitmq-server &?? $logs_file
-systemctl start rabbitmq-server &?? $logs_file
+systemctl enable rabbitmq-server &>> $logs_file
+systemctl start rabbitmq-server &>> $logs_file
 validate  $? "start rabbitmw server"
 
-rabbitmqctl add_user roboshop roboshop123 &?? $logs_file
-rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &?? $logs_file
+rabbitmqctl add_user roboshop roboshop123 &>> $logs_file
+rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>> $logs_file
 validate $? "adding rabbitmq roor user"
 
 
