@@ -34,7 +34,7 @@ cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
 validate $? "adding rabbitmq repo"
 
 dnf install erlang rabbitmq-server -y &>> $logs_file
-validate $? "install rabbit mq server" &?? $logs_file
+validate $? "install rabbit mq server" &>> $logs_file
 
 systemctl enable rabbitmq-server &>> $logs_file
 systemctl start rabbitmq-server &>> $logs_file
