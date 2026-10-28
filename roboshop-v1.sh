@@ -17,15 +17,15 @@ do
                  --output text
     )
     echo "$instance ID: $instance_id"
-
+    echo "IP: $IP"
     if [ $instance != "frontend" ]; then
-        IP=$(aws ec2 describe-instances     --instance-ids i-0fe04bbb5bf3f72d7 \
+        IP=$(aws ec2 describe-instances     --instance-ids $instance_id \
             --query 'Reservations[].Instances[].PrivateIpAddress'     --output text
         )
         r53_record="$instance.$domain_name"
     else 
-        IP=$(aws ec2 describe-instances     --instance-ids i-0fe04bbb5bf3f72d7 \
-            --query 'Reservations[].Instances[].PblicIpAddress'     --output text
+        IP=$(aws ec2 describe-instances     --instance-ids $instance_id \
+            --query 'Reservations[].Instances[].PublicIpAddress'     --output text
         )
         r53_record="$domain_name"
     fi
