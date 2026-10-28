@@ -42,7 +42,7 @@ do
           "Name": "$r53_record",
           "Type": "A",
           "TTL": 300,
-          "ResourceRecords": [{"Value": "$IP"}]
+          "ResourceRecords": [{"Value": "'$IP'"}]
         }
       }
     ]
