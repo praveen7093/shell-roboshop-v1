@@ -28,11 +28,17 @@ validate(){
 cp mongo.repo /etc/yum.repos.d/mongo.repo
 validate $? "Adding mongo repo"
 
-dnf install mongodb-org -y
+dnf install mongodb-org -y &>> $logs_file
 validate $? "install mongoDB"
 
 systemctl enable mongod
 systemctl start mongod
 validate $? "enable and start mongoDB"
+
+sed -i 's/1270.0.0.1/0.0.0.0/g' /etc/mongod.conf
+validate $? "validating remote connections to mongodb"
+
+systemctl restart mongod
+validate $? "restarting mongodb"
 
 
