@@ -22,16 +22,17 @@ do
         IP=$(aws ec2 describe-instances     --instance-ids i-0fe04bbb5bf3f72d7 \
             --query 'Reservations[].Instances[].PrivateIpAddress'     --output text
         )
-        r53_record ="$instance.$domain_name"
+        r53_record="$instance.$domain_name"
     else 
         IP=$(aws ec2 describe-instances     --instance-ids i-0fe04bbb5bf3f72d7 \
             --query 'Reservations[].Instances[].PblicIpAddress'     --output text
         )
+        r53_record="$domain_name"
     fi
 
 
     #route 53 record
-    	
+    echo "Record : $r53_record"
 	aws route53 change-resource-record-sets \
   --hosted-zone-id "$hosted_zone_id" \
   --change-batch '{
@@ -41,12 +42,11 @@ do
         "ResourceRecordSet": {
           "Name": "'$r53_record'",
           "Type": "A",
-          "TTL": 300,
+          "TTL": 1,
           "ResourceRecords": [{"Value": "'$IP'"}]
         }
       }
     ]
   }'
-
-    
+  echo "updated reord for $instance instance"
 done
