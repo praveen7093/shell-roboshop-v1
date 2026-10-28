@@ -30,8 +30,7 @@ do
         r53_record="$domain_name"
     fi
 
-
-    #route 53 record
+  	#Route 53 record
     echo "Record : $r53_record"
 	aws route53 change-resource-record-sets \
   --hosted-zone-id "$hosted_zone_id" \
@@ -43,7 +42,11 @@ do
           "Name": "'$r53_record'",
           "Type": "A",
           "TTL": 1,
-          "ResourceRecords": [{"Value": "'$IP'"}]
+          "ResourceRecords": [
+            {
+              "Value": "'$IP'"
+            }
+          ]
         }
       }
     ]
