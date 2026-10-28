@@ -17,7 +17,11 @@ do
                  --output text
     )
     echo "$instance ID: $instance_id"
-    echo "IP: $IP"
+    if [ -z "$instance_id" ] || [ "$instance_id" = "None" ]; then
+    echo "ERROR: Instance creation failed for $instance"
+    exit 1
+    fi
+
     if [ $instance != "frontend" ]; then
         IP=$(aws ec2 describe-instances     --instance-ids $instance_id \
             --query 'Reservations[].Instances[].PrivateIpAddress'     --output text
@@ -29,7 +33,7 @@ do
         )
         r53_record="$domain_name"
     fi
-
+    echo $IP
   	#Route 53 record
     echo "Record : $r53_record"
 	aws route53 change-resource-record-sets \
