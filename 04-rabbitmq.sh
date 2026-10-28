@@ -41,8 +41,9 @@ systemctl start rabbitmq-server &>> $logs_file
 validate  $? "start rabbitmw server"
 
 rabbitmqctl add_user roboshop roboshop123 &>> $logs_file
+validate $? "adding rabbitmq roboshop user"
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>> $logs_file
-validate $? "adding rabbitmq roor user"
+validate $? "setting permission for roboshop- user"
 
 
 echo "$(timestamp) [INFO] ===== script  execution seconds : $SECONDS ======"
