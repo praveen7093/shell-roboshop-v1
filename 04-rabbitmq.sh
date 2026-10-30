@@ -42,7 +42,7 @@ validate  $? "start rabbitmw server"
 
 rabbitmqctl list_users | grep -qw "roboshop"
 if [ $? -ne 0 ]; then
-    rarabbitmqctl add_user roboshop roboshop123 &>> $logs_file
+    rabbitmqctl add_user roboshop roboshop123 &>> $logs_file
     validate $? "creating rabbitmq roboshop user"
 else
    echo -e "$(timestamp) [INFO] Rabbitmq user already exist..${Y}SKIPPING${N}"
