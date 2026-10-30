@@ -2,6 +2,7 @@
 user_id=$(id -u)
 logs_folder="/var/log/roboshop"
 logs_file="${logs_folder}/${0}.log"
+domain_name="koladaws.store"
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -45,10 +46,28 @@ if [ $? -ne 0 ]; then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
     validate $? "creating system user"
 else
-    echo -e "system user roboshop already user is exisit....${Y}Skipping{N}"
+    echo -e "system user roboshop already user is exisit....${Y}Skipping${N}"
 fi
+mkdir -p /app
+validate $? "creatin app directory"
 
+curl -L -o /tmp/catalogue.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/catalogue-v4.zip
+validate $? "downloading catalogue"
 
+cd /app
+unzip /tmp/catalogue.zip
+validate $? "unzipping catalogue"
+
+npm install
+validate $? "installing dependencies"
+
+sed -i 's/DOMAIN_NAME/$domain_name" catalogue.service'
+cp catalogue.service /etc/systemd/system/catalogue.service
+
+systemctl daemon-reload &>> $logs_file
+systemctl enable catalogue &>> $logs_file
+systemctl start catalogue &>> $logs_file
+validate "starting and enabling the catalogue service"
 
 echo "$(timestamp) [INFO] ===== script  execution seconds : $SECONDS ======"
 echo "$(timestamp) [INFO] ===== script execution time======" | tee -a $logs_file
