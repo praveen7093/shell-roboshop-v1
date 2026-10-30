@@ -3,6 +3,7 @@ user_id=$(id -u)
 logs_folder="/var/log/roboshop"
 logs_file="${logs_folder}/${0}.log"
 domain_name="koladaws.store"
+scripts_dir=$(dirname "$(realpath "$0")")
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -61,7 +62,7 @@ validate $? "unzipping catalogue"
 npm install
 validate $? "installing dependencies"
 
-sed -i 's/DOMAIN_NAME/$domain_name" catalogue.service'
+sed -i "s/DOMAIN_NAME/$domain_name" "$scripts_dir/catalogue.service"
 cp catalogue.service /etc/systemd/system/catalogue.service
 
 systemctl daemon-reload &>> $logs_file
