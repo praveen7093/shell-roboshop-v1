@@ -76,6 +76,9 @@ cp "$scripts_dir/shipping.service" /etc/systemd/system/shipping.service
 dnf install mysql -y
 validate $? "installing ysql client"
 
+mysql -h mysql.koladaws.store mysql -u root -pRoboShop@1 -e "SELECT COUNT(*) FROM cities.cities;"
+validate $? "lodading shipping data"
+
 systemctl daemon-reload &>> $logs_file
 systemctl enable shipping &>> $logs_file
 systemctl start shipping &>> $logs_file
