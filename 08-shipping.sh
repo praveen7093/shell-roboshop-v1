@@ -57,11 +57,11 @@ validate $? "removing old code"
 mkdir -p /app
 validate $? "creatin app directory"
 
-curl -L -o /tmp/validate $? "downloading shipping".zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip
+curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip
 validate $? "downloading shipping"
 
 cd /app
-unzip /tmp/cart.zip
+unzip /tmp/shipping.zip
 validate $? "unzipping shipping"
 
 mvn clean package &>> $logs_file
