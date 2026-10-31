@@ -79,6 +79,7 @@ validate $? "adding mongo repo"
 dnf install mongodb-mongosh -y
 validate $? "installing mongodb client"
 
+
 mongosh --host "mongodb.$domain_name" </app/db/master-data.js
 validate $? "lodading products"
 
