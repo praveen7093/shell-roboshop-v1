@@ -76,5 +76,4 @@ validate $? "adding mongo repo"
 dnf install mongodb-mongosh -y
 validate $? "installing mongodb client"
 
-echo "$(timestamp) [INFO] ===== script  execution seconds : $SECONDS ======"
-echo "$(timestamp) [INFO] ===== script execution time======" | tee -a $logs_file
+echo "$(timestamp) [INFO] ===== script execution seconds: $SECONDS =====" | tee -a "$logs_file"
