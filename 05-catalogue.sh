@@ -62,13 +62,13 @@ validate $? "unzipping catalogue"
 npm install
 validate $? "installing dependencies"
 
-sed -i "s/DOMAIN_NAME/$domain_name" "$scripts_dir/catalogue.service"    
+sed -i "s/DOMAIN_NAME/$domain_name/" "$scripts_dir/catalogue.service"    
 cp "$scripts_dir/catalogue.service" /etc/systemd/system/catalogue.service
 
 systemctl daemon-reload &>> $logs_file
 systemctl enable catalogue &>> $logs_file
 systemctl start catalogue &>> $logs_file
-validate "starting and enabling the catalogue service"
+validate $? "starting and enabling the catalogue service"
 
 cp "$scripts_dir//mongo.repo" /etc/systemd/system/mongo.repo"
 validate $? "adding mongo repo"
