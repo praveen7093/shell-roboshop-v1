@@ -32,9 +32,57 @@ validate(){
 
 echo "$(timestamp) [INFO] ===== script started execution======" | tee -a $logs_file
 
-dnf module enable maven:3.9 -y
-dnf install maven java-25-openjdk-devel -y
+dnf module enable maven:3.9 -y &>> logs_file
+dnf install maven java-25-openjdk-devel -y &>> logs_file
 validate $? "installing java and maven"
 
+echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh
+source /etc/profile.d/java.sh
+echo $JAVA_HOME
+validate $? "setting JAVA_HOME for maven"
+
+alternatives --set  java "/usr/lib/jvm/java-25-openjdk/bin/java"
+validate $? "setting java 25 as default java version"
+
+id roboshop &>> $logs_file
+if [ $? -ne 0 ]; then
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+    validate $? "creating system user"
+else
+    echo -e "system user roboshop already user is exisit....${Y}Skipping${N}"
+fi
+rm -rf /app
+validate $? "removing old code"
+
+mkdir -p /app
+validate $? "creatin app directory"
+
+curl -L -o /tmp/validate $? "downloading shipping".zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip
+validate $? "downloading shipping"
+
+cd /app
+unzip /tmp/cart.zip
+validate $? "unzipping shipping"
+
+mvn clean package &>> $logs_file
+validate $? "installing dependencies"
+
+mv target/shipping.jar shipping.jar
+validate $? "moving shipping jar files"
+
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/shipping.service"    
+cp "$scripts_dir/shipping.service" /etc/systemd/system/shipping.service
+
+dnf install mysql -y
+validate $? "installing ysql client"
+
+systemctl daemon-reload &>> $logs_file
+systemctl enable shipping &>> $logs_file
+systemctl start shipping &>> $logs_file
+validate $? "starting and enabling the shipping service"
+
+
+systemctl restart shipping
+validate $? "restarting shipping"
 
 echo "$(timestamp) [INFO] ===== script execution seconds: $SECONDS =====" | tee -a $logs_file
