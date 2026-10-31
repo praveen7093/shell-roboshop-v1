@@ -76,11 +76,21 @@ validate $? "starting and enabling the catalogue service"
 cp "$scripts_dir//mongo.repo" /etc/yum.repos.d/mongo.repo
 validate $? "adding mongo repo"
 
-dnf install mongodb-mongosh -y
+dnf install mongodb-mongosh -y &>> $logs_file
 validate $? "installing mongodb client"
 
+product_count=$(mongosh --host "mongodb.$domain_name" --quiet --eval 'db.getSiblingDB("catalogue").products.countDocuments()' 2>> $logs_file)
+validate $? "connecting to mongodb"
 
-mongosh --host "mongodb.$domain_name" </app/db/master-data.js
-validate $? "lodading products"
+if [product_count -eq 0 ]; then
+    mongosh --host "mongodb.$domain_name" </app/db/master-data.js
+    validate $? "loading products"
+else 
+    echo -e "$(timestamp) [INFO] products are already loaded....${y}Skipping${N}"
+fi
+
+systemctl restart catalogue
+validate $? "restarting catalogue"
+
 
 echo "$(timestamp) [INFO] ===== script execution seconds: $SECONDS =====" | tee -a $logs_file
