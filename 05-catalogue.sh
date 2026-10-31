@@ -70,5 +70,11 @@ systemctl enable catalogue &>> $logs_file
 systemctl start catalogue &>> $logs_file
 validate "starting and enabling the catalogue service"
 
+cp "$scripts_dir//mongo.repo" /etc/systemd/system/mongo.repo"
+validate $? "adding mongo repo"
+
+dnf install mongodb-mongosh -y
+validate $? "installing mongodb client"
+
 echo "$(timestamp) [INFO] ===== script  execution seconds : $SECONDS ======"
 echo "$(timestamp) [INFO] ===== script execution time======" | tee -a $logs_file
