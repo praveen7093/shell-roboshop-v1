@@ -49,6 +49,9 @@ if [ $? -ne 0 ]; then
 else
     echo -e "system user roboshop already user is exisit....${Y}Skipping${N}"
 fi
+rm -rf /app
+validate $? "removing old code"
+
 mkdir -p /app
 validate $? "creatin app directory"
 
