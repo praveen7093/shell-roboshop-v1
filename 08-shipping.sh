@@ -76,7 +76,7 @@ cp "$scripts_dir/shipping.service" /etc/systemd/system/shipping.service
 dnf install mysql -y
 validate $? "installing ysql client"
 
-mysql -h mysql.koladaws.store mysql -u root -pRoboShop@1 < /app/db/app-user.sql"
+mysql -h mysql.koladaws.store mysql -u root -pRoboShop@1 < /app/db/app-user.sql
 validate $? "lodading shipping data"
 
 systemctl daemon-reload &>> $logs_file
