@@ -83,7 +83,7 @@ if [[ -z $count ]] || [ $count -eq 0]; then
     mysql -h mysql.$domain_name -u root -p'RoboShop@1' < /app/db/master-data.sql
     validate $? "loading cities master data"
 else
-    echo -e "$(timestamp) [INFO] master data is already loaded....${Y}SIPPING${N}"
+    echo -e "$(timestamp) [INFO] master data is already loaded....${Y}SKIPPING${N}"
 fi
 
  # Configure application database user
