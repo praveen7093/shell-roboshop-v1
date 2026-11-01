@@ -55,7 +55,7 @@ validate $? "removing old code"
 mkdir -p /app
 validate $? "creatin app directory"
 
-curl -L -o /tmp/validate $? "downloading cart".zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/cart-v4.zip
+curl -L -o /tmp/cart.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/cart-v4.zip
 validate $? "downloading cart"
 
 cd /app
