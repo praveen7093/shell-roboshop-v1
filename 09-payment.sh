@@ -32,7 +32,7 @@ validate(){
 
 echo "$(timestamp) [INFO] ===== script started execution======" | tee -a $logs_file
 
-dnf install python3.14 python3.14-pip -y &>> "$logs_file"
+dnf install python3.14 python3.14-pip -y &>> $logs_file
 validate $? "installing pyhton 3.14"
 
 python3.14 --version
@@ -46,31 +46,31 @@ else
     echo -e "system user roboshop already user is exisit....${Y}Skipping${N}"
 fi
 
-rm -rf /app
-validate $? "removing old code"
+rm -rf /app &>> $logs_file
+validate $? "removing old code" 
 
-mkdir -p /app
+mkdir -p /app &>> $logs_file
 validate $? "creatin app directory"
 
 curl -L -o /tmp/payment.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/payment-v4.zip
 validate $? "downloading payment"
 
 cd /app
-unzip /tmp/payment.zip
+unzip /tmp/payment.zip &>> $logs_file
 validate $? "unzipping payment"
 
-python3.14 -m venv /app/.venv
+python3.14 -m venv /app/.venv &>> $logs_file
 validate $? "creating virtual environment"
 
-/app/.venv/bin/pip install -r requirements.txt
+/app/.venv/bin/pip install -r requirements.txt &>> $logs_file
 validate $? "installing dependencies"
 
 sed -i "s/DOMAIN_NAME/${domain_name}/g" "$scripts_dir/payment.service"
 cp "$scripts_dir/payment.service" /etc/systemd/system/payment.service
 
-systemctl daemon-reload
-systemctl enable payment
-systemctl restart payment
+systemctl daemon-reload &>> $logs_file
+systemctl enable payment &>> $logs_file
+systemctl restart payment &>> $logs_file
 validate $? "starting/restarting payment"
 
 echo "$(timestamp) [INFO] ===== script execution seconds: $SECONDS =====" | tee -a $logs_file

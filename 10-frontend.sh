@@ -37,7 +37,7 @@ validate $? "installing nginx"
 
 systemctl enable nginx &>> logs_file
 systemctl start nginx &>> logs_file
-validate $? "start nginx server"
+validate $? "enable/start nginx server"
 
 
 id roboshop &>> $logs_file
@@ -48,7 +48,23 @@ else
     echo -e "system user roboshop already user is exisit....${Y}Skipping${N}"
 fi
 
-rm -rf /usr/share/nginx/html/*
+rm -rf /usr/share/nginx/html/* &>> $logs_file
 validate $? "removing default content"
+
+curl -L -o /tmp/frontend.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/frontend-v4.zip
+cd /usr/share/nginx/html &>> $logs_file
+unzip /tmp/frontend.zip &>> $logs_file
+validate $? "downloading and unzipping frontend code"
+
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/roboshop.conf"
+cp "$scripts_dir/roboshop.conf" /etc/systemd/system/roboshop.conf
+valiate $? "copied roboshop config"
+
+nginx -t &>> $logs_file
+validate $? "Nginx configuration"
+
+systemctl restart nginx &>> $logs_file
+validate $? "restarting nginx"
+
 
 echo "$(timestamp) [INFO] ===== script started execution======" | tee -a $logs_file
