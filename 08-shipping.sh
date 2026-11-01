@@ -76,20 +76,22 @@ cp "$scripts_dir/shipping.service" /etc/systemd/system/shipping.service
 dnf install mysql -y
 validate $? "installing mysql client"
 
-# Load cities database and master data
-mysql -h mysql.koladaws.store -u root -p'RoboShop@1' < /app/db/master-data.sql
-validate $? "loading cities master data"
 
-# Configure application database user
-mysql -h mysql.koladaws.store -u root -p'RoboShop@1' < /app/db/app-user.sql
+count=$(mysql -h mysql.$domain_name -u root  -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM  cities.cities;" 2>> $logs_file)
+if [[ -z $count ]] || [ $count -eq 0]; then
+    # Load cities database and master data
+    mysql -h mysql.$domain_name -u root -p'RoboShop@1' < /app/db/master-data.sql
+    validate $? "loading cities master data"
+else
+    echo -e "$(timestamp) [INFO] master data is already loaded"
+fi
+
+ # Configure application database user
+mysql -h mysql.$domain_name -u root -p'RoboShop@1' < /app/db/app-user.sql
 validate $? "configuring shipping database user"
 
 systemctl daemon-reload &>> $logs_file
 systemctl enable shipping &>> $logs_file
-systemctl start shipping &>> $logs_file
-validate $? "starting and enabling the shipping service"
-
-
 systemctl restart shipping
 validate $? "restarting shipping"
 
