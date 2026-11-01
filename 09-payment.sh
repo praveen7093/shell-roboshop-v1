@@ -60,7 +60,7 @@ unzip /tmp/payment.zip
 validate $? "unzipping payment"
 
 python3.14 -m venv /app/.venv
-validte $? "creating virtual environment"
+validate $? "creating virtual environment"
 
 /app/.venv/bin/pip install -r requirements.txt
 validate $? "installing dependencies"
