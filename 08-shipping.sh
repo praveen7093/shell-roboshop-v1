@@ -74,10 +74,15 @@ sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/shipping.service"
 cp "$scripts_dir/shipping.service" /etc/systemd/system/shipping.service
 
 dnf install mysql -y
-validate $? "installing ysql client"
+validate $? "installing mysql client"
 
-mysql -h mysql.koladaws.store mysql -u root -pRoboShop@1 < /app/db/app-user.sql
-validate $? "lodading shipping data"
+# Load cities database and master data
+mysql -h mysql.koladaws.store -u root -p'RoboShop@1' < /app/db/master-data.sql
+validate $? "loading cities master data"
+
+# Configure application database user
+mysql -h mysql.koladaws.store -u root -p'RoboShop@1' < /app/db/app-user.sql
+validate $? "configuring shipping database user"
 
 systemctl daemon-reload &>> $logs_file
 systemctl enable shipping &>> $logs_file
