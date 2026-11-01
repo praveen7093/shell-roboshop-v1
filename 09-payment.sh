@@ -32,7 +32,7 @@ validate(){
 
 echo "$(timestamp) [INFO] ===== script started execution======" | tee -a $logs_file
 
-dnf install python3.14 python3.14-pip -y &>> logs_file
+dnf install python3.14 python3.14-pip -y &>> "$logs_file"
 validate $? "installing pyhton 3.14"
 
 python3.14 --version
