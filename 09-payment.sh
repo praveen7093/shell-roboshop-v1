@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 user_id=$(id -u)
 logs_folder="/var/log/roboshop"
 logs_file="${logs_folder}/${0}.log"
@@ -27,7 +26,7 @@ validate(){
         echo -e "$(timestamp) [ERROR] ${2}.. is ${R}failed${N}" | tee -a $logs_file
         exit 1
     else 
-        echo -e "$ $(timestamp) [INFO] {2}  is ${G}sucess${N}" | tee -a $logs_file
+        echo -e "$ $(timestamp) [INFO] ${2}.. is ${G}sucess${N}" | tee -a $logs_file
     fi
 }
 
@@ -66,7 +65,7 @@ validte $? "creating virtual environment"
 /app/.venv/bin/pip install -r requirements.txt
 validate $? "installing dependencies"
 
-sed -i "s/DOMAIN_NAME/domain_name/g" "$scripts_dir/payment.service"
+sed -i "s/DOMAIN_NAME/${domain_name}/g" "$scripts_dir/payment.service"
 cp "$scripts_dir/payment.service" /etc/systemd/system/payment.service
 
 systemctl daemon-reload
