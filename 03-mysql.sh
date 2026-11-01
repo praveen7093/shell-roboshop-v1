@@ -24,7 +24,7 @@ validate(){
         echo -e "$(timestamp) [ERROR] ${2}.. is ${R}failed${N}" | tee -a $logs_file
         exit 1
     else 
-        echo -e "$ $(timestamp) [INFO] {2}  is ${G}sucess${N}" | tee -a $logs_file
+        echo -e "$ $(timestamp) [INFO] ${2}..  is ${G}sucess${N}" | tee -a $logs_file
     fi
 }
 

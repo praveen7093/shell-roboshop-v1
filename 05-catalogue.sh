@@ -26,7 +26,7 @@ validate(){
         echo -e "$(timestamp) [ERROR] ${2}.. is ${R}failed${N}" | tee -a $logs_file
         exit 1
     else 
-        echo -e "$ $(timestamp) [INFO] {2}  is ${G}sucess${N}" | tee -a $logs_file
+        echo -e "$ $(timestamp) [INFO] ${2}  is ${G}sucess${N}" | tee -a $logs_file
     fi
 }
 
@@ -70,7 +70,7 @@ cp "$scripts_dir/catalogue.service" /etc/systemd/system/catalogue.service
 
 systemctl daemon-reload &>> $logs_file
 systemctl enable catalogue &>> $logs_file
-systemctl start catalogue &>> $logs_file
+systemctl start catalogue &>> $logs_file    
 validate $? "starting and enabling the catalogue service"
 
 cp "$scripts_dir//mongo.repo" /etc/yum.repos.d/mongo.repo
